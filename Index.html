@@ -34,9 +34,9 @@
        ctx.lineWidth = paddle.R;    
                
       var ball = {
-            x: 50
-           ,y: 10
-           ,r: 3
+            x: 170
+           ,y: 540
+           ,r: 10
            ,draw:function(ctx){
            ctx.fillStyle = "rgb(255, 0, 0)";
            ctx.beginPath();
@@ -55,6 +55,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);      
       paddle.draw(ctx);
       ball.draw(ctx);    
+      
       requestAnimationFrame(gameloop); 
     }
 
@@ -62,21 +63,20 @@
         window.addEventListener("keydown", function(event) { 
         // Just log the event to the console.
           
-          switch (event.keyCode) {            
-            case 39:      
-              paddle.X+=25;
-              break;
-            case 37:      
-              paddle.X-=25;
-              break;
-            default:
-              
-                  break;                   
-            }
-                      
-            gameloop();
+          
+           if (event.keyCode == 39) {//right arrow
+              if(paddle.X <canvas.width-127){
+                  paddle.X+= 20;
+              }     
+          }
+          else if (event.keyCode == 37) {//left arrow key
+              if(paddle.X >0){
+                  paddle.X -= 20;
+              }
+          }
             
           });
+        gameloop();
         
         
       
