@@ -1,13 +1,54 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    ...
-    <style type="text/css"></style>
+  <head>  
+
+<style type="text/css">
+      canvas {
+        border: 10px solid grey; 
+      }
+  </style>
   </head>
   <body>
-    ...
+       <canvas id="canvas-for-ball" width="800" height="600"></canvas>
+    
     <script type="text/javascript">
-      ...
+         // Gets a handle to the element with id canvasOne.
+      var canvas = document.getElementById("canvas-for-ball");
+      // Get a 2D context for the canvas.
+      var ctx = canvas.getContext("2d");
+        
+       var  paddle = {  
+             X: 150
+             ,Y: 550
+             ,W: 125
+             ,H: 35
+             ,R: 20
+       }
+       // Set faux rounded corners
+       ctx.lineJoin = "round";
+       ctx.lineWidth = paddle.R;    
+               
+      var ball = {
+            x: 50
+           ,y: 10
+           ,r: 3
+      }
+      
+        
+        // Make the fill style red.
+       function draw(){
+        ctx.fillStyle = "rgb(255, 0, 0)";
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, 10, 0, 2 * Math.PI);
+        ctx.fill();
+                     
+        ctx.strokeRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);
+        ctx.fillRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);
+
+           
+       }
+        draw();
+      
     </script>
   </body>
 </html>
