@@ -23,8 +23,13 @@
              ,W: 125
              ,H: 35
              ,R: 20
+           ,draw:function(ctx){
+              ctx.strokeRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2),        paddle.W-paddle.R, paddle.H-paddle.R);
+        ctx.fillRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);     
+                      
+        }//draw
        }
-       // Set faux rounded corners
+       
        ctx.lineJoin = "round";
        ctx.lineWidth = paddle.R;    
                
@@ -32,22 +37,48 @@
             x: 50
            ,y: 10
            ,r: 3
+           ,draw:function(ctx){
+           ctx.fillStyle = "rgb(255, 0, 0)";
+           ctx.beginPath();
+           ctx.arc(ball.x, ball.y, 10, 0, 2 * Math.PI);
+           ctx.fill();
+           }
       }
       
         
         // Make the fill style red.
-       function draw(){
-        ctx.fillStyle = "rgb(255, 0, 0)";
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, 10, 0, 2 * Math.PI);
-        ctx.fill();
+       
                      
-        ctx.strokeRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);
-        ctx.fillRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);
+      
+        
+        function gameloop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);      
+      paddle.draw(ctx);
+      ball.draw(ctx);    
+      requestAnimationFrame(gameloop); 
+    }
 
-           
-       }
-        draw();
+
+        window.addEventListener("keydown", function(event) { 
+        // Just log the event to the console.
+          
+          switch (event.keyCode) {            
+            case 39:      
+              paddle.X+=25;
+              break;
+            case 37:      
+              paddle.X-=25;
+              break;
+            default:
+              
+                  break;                   
+            }
+                      
+            gameloop();
+            
+          });
+        
+        
       
     </script>
   </body>
