@@ -17,6 +17,8 @@
       // Get a 2D context for the canvas.
       var ctx = canvas.getContext("2d");
         
+            
+        
        var  paddle = {  
              X: 150
              ,Y: 550
@@ -40,13 +42,50 @@
 	       ,dx: 4
            ,dy:4
            ,draw:function(ctx){
-           ctx.fillStyle = "rgb(255, 0, 0)";
+           ctx.fillStyle = "red";
            ctx.beginPath();
            ctx.arc(ball.x, ball.y, 10, 0, 2 * Math.PI);
            ctx.fill();
            }         
             
       }
+      
+      var Brick = {
+             brickRow : 5
+            ,brickCol : 9
+            ,bw : 75
+            ,bh : 20
+            ,bPad : 10
+            ,brickOffsetTop : 30
+            ,brickOffsetLeft : 30  
+            ,drawBricks: function () {
+              for(c=0; c<Brick.brickCol; c++) {
+                    for(r=0; r<Brick.brickRow; r++) {
+                        var brickX = (c*(Brick.bw+Brick.bPad))+Brick.brickOffsetLeft;
+                        var brickY = (r*(Brick.bh+Brick.bPad))+Brick.brickOffsetTop;
+                        bricks[c][r].x = 0;
+                        bricks[c][r].y = 0;
+                        ctx.beginPath();
+                        ctx.rect(brickX, brickY, Brick.bw, Brick.bh);
+                        ctx.fillStyle = "blue";
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                }
+            }
+          
+      }
+      var bricks = [];
+                for(c=0; c<Brick.brickCol; c++) {
+                    bricks[c] = [];
+                        for(r=0; r<Brick.brickRow; r++) {
+                            bricks[c][r] = { x: 0, y: 0 };
+                        }
+                }
+            
+     
+      
+      
       
       function collision(){
       if( ball.x<0 || ball.x>canvas.width)
@@ -59,12 +98,16 @@
       
         
         
+        
      
         
         function gameloop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);      
       paddle.draw(ctx);
       ball.draw(ctx);
+      Brick.drawBricks();
+    
+      
       
       collision();
       
@@ -79,17 +122,19 @@
           
            if (event.keyCode == 39) {//right arrow
               if(paddle.X <canvas.width-127){
-                  paddle.X+= 20;
+                  paddle.X+= 30;
               }     
           }
           else if (event.keyCode == 37) {//left arrow key
               if(paddle.X >0){
-                  paddle.X -= 20;
+                  paddle.X -= 30;
               }
           }
             
           });
+        
         gameloop();
+        
         
         
       
