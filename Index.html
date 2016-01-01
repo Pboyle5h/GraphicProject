@@ -36,7 +36,7 @@
        ctx.lineWidth = paddle.R;    
                
       var ball = {
-            x: 170
+            x: 270
            ,y: 540
            ,r: 10
 	       ,dx: 4
@@ -82,18 +82,26 @@
                             bricks[c][r] = { x: 0, y: 0 };
                         }
                 }
-            
      
       
       
-      
       function collision(){
-      if( ball.x<0 || ball.x>canvas.width)
-	ball.dx=-ball.dx;
-	if( ball.y<0 ||ball.y>canvas.height)
-		ball.dy=-ball.dy;
-		ball.x+=ball.dx;
-		ball.y+=ball.dy;
+        if( ball.x<0 || ball.x>canvas.width)
+	       ball.dx=-ball.dx;
+	   if( ball.y<0 ||ball.y>canvas.height)
+		   ball.dy=-ball.dy;
+		   ball.x+=ball.dx;
+		   ball.y+=ball.dy;
+          
+        if (ball.x + ball.r < paddle.X || ball.x - ball.r > paddle.X + paddle.W)
+            return;
+                 
+        if (ball.y + ball.r  < paddle.Y|| ball.y - ball.r > paddle.Y + paddle.H)
+            return;
+
+        else {
+            ball.dy = -ball.dy;
+            }          
 	} 
       
         
@@ -105,11 +113,10 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);      
       paddle.draw(ctx);
       ball.draw(ctx);
-      Brick.drawBricks();
-    
-      
+      Brick.drawBricks();       
       
       collision();
+ 
       
       
       requestAnimationFrame(gameloop); 
