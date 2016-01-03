@@ -5,7 +5,7 @@
 <style type="text/css">
       canvas {
         border: 10px solid grey; 
-          padding: 0;
+        padding: 0;
         margin: auto;
         display: block;
         width: 800px;
@@ -15,6 +15,7 @@
         bottom: 0;
         left: 0;
         right: 0;
+        color: "black";
       }
   </style>
   </head>
@@ -169,6 +170,19 @@
              
             if(score==45){
                 alert("YOU WIN!");
+                document.location.reload(); 
+            }
+             if( ball.y<0 ||ball.y>canvas.height)
+                 {
+                     lives--;
+                     
+                     ball.x = 370;
+                     ball.y = 540;
+                     paddle.X = 150;
+                     paddle.Y = 550;
+                 }
+            if(lives==0){
+                alert("GAME OVER YOU LOSE");
                 document.location.reload(); 
             }
             
