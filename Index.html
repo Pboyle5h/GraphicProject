@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>  
-
+ 
 <style type="text/css">
-      canvas {
+
+    canvas {
         border: 10px solid grey; 
         padding: 0;
         margin: auto;
@@ -14,12 +15,13 @@
         top: 0;
         bottom: 0;
         left: 0;
-        right: 0;
-        color: "black";
+        right: 0;       
       }
   </style>
   </head>
+  
   <body>
+       
        <canvas id="canvas-for-ball" width="800" height="600"></canvas>
     
     <script type="text/javascript">
@@ -27,26 +29,28 @@
       var canvas = document.getElementById("canvas-for-ball");
       // Get a 2D context for the canvas.
       var ctx = canvas.getContext("2d");
+    //varables for keeping score and lives
       var score=0;
       var lives=3;
       
             
-        
+    //Paddle object which also has the function to draw it to the screen
+    //i have added a border around the original paddle to give it the rounded look and the 2 colours
        var  paddle = {  
-             X: 150
+              X: 150
              ,Y: 550
              ,W: 125
              ,H: 35
              ,R: 20
-           ,draw:function(ctx){
-              ctx.strokeRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2),        paddle.W-paddle.R, paddle.H-paddle.R);
-        ctx.fillRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);     
-                      
-        }//draw
-       }
+             ,draw:function(ctx){
+                ctx.strokeRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2),        paddle.W-paddle.R, paddle.H-paddle.R);
+                ctx.fillRect(paddle.X+(paddle.R/2), paddle.Y+(paddle.R/2), paddle.W-paddle.R, paddle.H-paddle.R);     
+                ctx.lineJoin = "round";
+                ctx.lineWidth = paddle.R;            
+            }//draw
+       }//paddle
        
-       ctx.lineJoin = "round";
-       ctx.lineWidth = paddle.R;    
+         
                
       var ball = {
             x: 270
@@ -63,7 +67,7 @@
            }         
             
       }
-      
+      //brick object  which also has the draw function for drawing the bricks to the screen
       var Brick = {
              brickRow : 9
             ,brickCol : 5
@@ -73,8 +77,10 @@
             ,brickOffsetTop : 30
             ,brickOffsetLeft : 30  
             ,drawBricks : function () {
+                //the two for is looping through the the array column by column and row by row
                 for(c=0; c<Brick.brickCol; c++) {
                     for(r=0; r<Brick.brickRow; r++) {
+                        //The if statement is used to check if there is a brick in the current location if not it draws one. 
                         if(bricks[c][r].active == 1) {
                             var brickX = (r*(Brick.bw+Brick.bPad))+Brick.brickOffsetLeft;
                             var brickY = (c*(Brick.bh+Brick.bPad))+Brick.brickOffsetTop;
@@ -86,23 +92,24 @@
                             ctx.fillStyle = "#0095DD";
                             ctx.fill();
                             ctx.closePath();
-                        }
-                    }
-                }
-            }       
-            
-          
-      }
+                        }//if
+                    }//inner for
+                }//outter for
+            }//draw bricks             
+      }//brick
+      
+      //creates the Two dimensional array it which gets poplated in the draw bricks method
       var bricks = [];
                 for(c=0; c<Brick.brickCol; c++) {
                     bricks[c] = [];
                         for(r=0; r<Brick.brickRow; r++) {
                            bricks[c][r] = { x: 0, y: 0, active: 1 };
-                        }
-                }
-        
+                        }//inner for
+                }//outter for
+    
+    //functions used to move the ball around the canvas  
      function moveBall(){
-          if(ball.x + ball.dx > canvas.width-ball.r || ball.x + ball.dx < ball.r) {
+        if(ball.x + ball.dx > canvas.width-ball.r || ball.x + ball.dx < ball.r) {
             ball.dx = -ball.dx;
         }
         if(ball.y + ball.dy < ball.r) {
@@ -113,32 +120,32 @@
         ball.x += ball.dx;
         ball.y += ball.dy;
      }
+        //event listener used to move the paddle left and right on the canavs
         function movePaddle(){
-        window.addEventListener("keydown", function(event) { 
-      
+            window.addEventListener("keydown", function(event) {    
           
-          
-           if (event.keyCode == 39) {//right arrow
-              if(paddle.X <canvas.width-127){
-                  paddle.X+= 30;
-              }     
-          }
-          else if (event.keyCode == 37) {//left arrow key
-              if(paddle.X >0){
-                  paddle.X -= 30;
-              }
-          }
+                if (event.keyCode == 39) {//right arrow
+                    if(paddle.X <canvas.width-127){
+                        paddle.X+= 30;
+                    }//inner if     
+                }//outter if
+                
+                else if (event.keyCode == 37) {//left arrow key
+                    if(paddle.X >0){
+                        paddle.X -= 30;
+                    }//inner if
+                }//outer if
             
-          });
+            });
         }
       
-      
+      //collision detection used to make sure the ball doesnt leave the canvas
       function collision(){
         if( ball.x<0 || ball.x>canvas.width)
 	       ball.dx=-ball.dx;
-	   if( ball.y<0 ||ball.y>canvas.height)
+        if( ball.y<0 ||ball.y>canvas.height)
 		   ball.dy=-ball.dy;   
-          
+        //these set of if statements are used to detect a collision with the ball and the paddle  
         if (ball.x + ball.r < paddle.X || ball.x - ball.r > paddle.X + paddle.W)
             return;
                  
@@ -149,9 +156,11 @@
             ball.dy = -ball.dy;
             }    
           
-	} 
+	   } 
         
-        function collisionDetection() {
+        //function used to detect if the ball has colided with the bricks and if so makes them dissappear 
+        //if the brick is hit it puts the score up by 1 
+    function collisionDetection() {
      
         for(c=0; c<Brick.brickCol; c++) {
             for(r=0; r<Brick.brickRow; r++) {
@@ -161,54 +170,57 @@
                         ball.dy = -ball.dy;
                         b.active = 0;
                         score++ 
-                    }
-                }
-            }
+                    }//inner if
+                }//outer if
+            }//inner for
+        }//outer for
+    }
+    
+     //function to determine if the game has been completed or if you lose
+        //you have 3 lives and every time you lose a life it resets the ball and paddle to a pre deetermined position
+        //if the lives equal 0 its game over 
+    function endGame(){     
+        if(score==45){
+            alert("YOU WIN!");
+            document.location.reload(); 
         }
-    }  
-        function endGame(){
-             
-            if(score==45){
-                alert("YOU WIN!");
-                document.location.reload(); 
-            }
-             if( ball.y<0 ||ball.y>canvas.height)
-                 {
-                     lives--;
+        if( ball.y<0 ||ball.y>canvas.height){
+             lives--;
                      
-                     ball.x = 370;
-                     ball.y = 540;
-                     paddle.X = 150;
-                     paddle.Y = 550;
-                 }
-            if(lives==0){
-                alert("GAME OVER YOU LOSE");
-                document.location.reload(); 
-            }
-            
+             ball.x = 370;
+             ball.y = 540;
+             paddle.X = 150;
+             paddle.Y = 550;
         }
+        if(lives==0){
+            alert("GAME OVER YOU LOSE");
+            document.location.reload(); 
+        }
+            
+    }
         
         
      
-        
+        //the game loop function is used for everything that need to be repeated/cheacked each change of the frames
         function gameloop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);      
-      paddle.draw(ctx);
-      ball.draw(ctx);
-      Brick.drawBricks();
-      moveBall();      
-      collision();
-      collisionDetection();
-      endGame();
- 
-      ctx.font="15px Arial";
-      ctx.fillText("SCORE: " + score, 10, canvas.height-10);
-      ctx.fillText("LIVES: " + lives, 700, canvas.height-10);
-      requestAnimationFrame(gameloop); 
+            ctx.clearRect(0, 0, canvas.width, canvas.height);      
+            paddle.draw(ctx);
+            ball.draw(ctx);
+            Brick.drawBricks();
+            moveBall();      
+            collision();
+            collisionDetection();
+            endGame();
+
+            ctx.font="15px Arial";
+            ctx.fillText("SCORE: " + score, 10, canvas.height-10);
+            ctx.fillText("LIVES: " + lives, 700, canvas.height-10);
+            requestAnimationFrame(gameloop); 
     }
 
-        
+        //if the move paddle was put in the game loop if would make it move very quickly and jumpy
         movePaddle();
+        //call the game loop function so that the game can start.
         gameloop();
         
         
