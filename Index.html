@@ -27,6 +27,7 @@
       // Get a 2D context for the canvas.
       var ctx = canvas.getContext("2d");
       var score=0;
+      var lives=3;
       
             
         
@@ -78,6 +79,7 @@
                             var brickY = (c*(Brick.bh+Brick.bPad))+Brick.brickOffsetTop;
                             bricks[c][r].x = brickX;
                             bricks[c][r].y = brickY;
+                            
                             ctx.beginPath();
                             ctx.rect(brickX, brickY, Brick.bw, Brick.bh);
                             ctx.fillStyle = "#0095DD";
@@ -112,7 +114,7 @@
      }
         function movePaddle(){
         window.addEventListener("keydown", function(event) { 
-        // Just log the event to the console.
+      
           
           
            if (event.keyCode == 39) {//right arrow
@@ -163,6 +165,14 @@
             }
         }
     }  
+        function endGame(){
+             
+            if(score==45){
+                alert("YOU WIN!");
+                document.location.reload(); 
+            }
+            
+        }
         
         
      
@@ -175,9 +185,11 @@
       moveBall();      
       collision();
       collisionDetection();
+      endGame();
  
       ctx.font="15px Arial";
       ctx.fillText("SCORE: " + score, 10, canvas.height-10);
+      ctx.fillText("LIVES: " + lives, 700, canvas.height-10);
       requestAnimationFrame(gameloop); 
     }
 
